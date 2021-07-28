@@ -1,3 +1,5 @@
 pollution_us_2000_2016.csv
 .DS_Store
 .ipynb_checkpoints
+gz_2010_us_040_00_500k.json
+__pycache__
