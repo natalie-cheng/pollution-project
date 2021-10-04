@@ -1,4 +1,4 @@
-# Pollution Project
-This is my pollution project.
+# Pollution Project: Analyzing US Air Pollution between 2000 and 2016
 
-It is a cool project.
+Hi!
+

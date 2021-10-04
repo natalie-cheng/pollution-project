@@ -1,9 +1,9 @@
 import pandas as pandas
 import matplotlib.pyplot as pyplot
 import numpy as numpy
-import geopandas as gpd
-import geoplot as gplt
 import streamlit as st
+import geopandas as gpd
+import pydeck as pdk
 
 from helpers.data import load_data, data_preprocessing, load_geo_data, geo_data_preprocessing
 from helpers.viz import yearly_pollution, monthly_pollution, ranking_pollution, pollution_map
@@ -95,13 +95,53 @@ st.write(geo_data.sample(3))
 # Clean and merge data
 st.subheader('Geo data Preprocessing: Cleaned and Merged Geo data (sample of 3)')
 merged = geo_data_preprocessing(geo_data.copy(), df_cleaned.copy())
-st.write(merged.sample(3))
+st.write(merged)
 
 # Map data
 st.subheader('Mapped data')
 
 st.markdown(f"__US {pollutant} Averages from 2000 to 2016__")
 
-pollution_map = pollution_map(merged, pollutant, values)
+COLOR_BREWER_BLUE_SCALE = [
+    [240, 249, 232],
+    [204, 235, 197],
+    [168, 221, 181],
+    [123, 204, 196],
+    [67, 162, 202],
+    [8, 104, 172],
+]
 
-st.pyplot(pollution_map)
+NO2Mean = pdk.Layer(
+    "HeatmapLayer",
+    data=merged,
+    opacity=0.9,
+    get_position=["long", "lat"],
+    aggregation=pdk.types.String("MEAN"),
+    color_range=COLOR_BREWER_BLUE_SCALE,
+    threshold=1,
+    get_weight="NO2Mean",
+    pickable=True,
+)
+
+SO2Mean = pdk.Layer(
+    "ColumnLayer",
+    data=merged,
+    get_position=["long", "lat"],
+    get_elevation="SO2Mean",
+    elevation_scale=100,
+    radius=50,
+    get_fill_color=[180, 0, 200, 140],
+    pickable=True,
+    auto_highlight=True,
+)
+
+st.pydeck_chart(pdk.Deck(
+    map_style='mapbox://styles/mapbox/light-v9',
+    initial_view_state=pdk.ViewState(
+    latitude=37.6000,
+    longitude=-95.6650,
+    zoom=5,
+    pitch=50,
+    ),
+    layers=[NO2Mean]
+))

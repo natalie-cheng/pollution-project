@@ -3,7 +3,6 @@ import matplotlib
 import numpy as np
 import pandas as pd
 import geopandas as gpd
-import geoplot as gplt
 import streamlit as st
 
 plt.style.use('ggplot')

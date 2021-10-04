@@ -1,6 +1,5 @@
 import pandas as pd
 import geopandas as gpd
-import geoplot as gplt
 import streamlit as st
 
 @st.cache(allow_output_mutation = True)
@@ -71,6 +70,10 @@ def geo_data_preprocessing(geo_data, df):
 
     # Extract coordinates from geo data
     merged['coords'] = merged['geometry'].apply(lambda x: x.representative_point().coords)
-    merged['coords'] = [coords[0] for coords in merged['coords']]
+    
+    merged['long'] = [coords[0][0] for coords in merged['coords']]
+    merged['lat'] = [coords[0][1] for coords in merged['coords']]
+
+    merged = merged[['NAME','NO2Mean','O3Mean','SO2Mean','COMean','long','lat']]
 
     return merged
