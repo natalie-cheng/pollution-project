@@ -1,5 +1,5 @@
 # Pollution Project: Analyzing US Air Pollution between 2000 and 2016, and predicting trends for the next 10 years
-# Last Project Update: October 4th 2021
+## Last Project Update: October 4th 2021
 
 Hello!
 
