@@ -17,7 +17,10 @@ def yearly_pollution(df, pollutant, cali=True, values=True):
     
     plot_data = plot_data.sort_values(by="YearLocal")
 
-    plot_grouped = plot_data.groupby('YearLocal').mean()
+    numeric_columns = plot_data.select_dtypes(include='number').columns
+
+    # Perform the groupby and mean calculation
+    plot_grouped = plot_data.groupby("YearLocal")[numeric_columns].mean()
 
     # Draw Chart
     fig, ax = plt.subplots()
@@ -58,7 +61,9 @@ def monthly_pollution(df, pollutant, cali=True, values=True):
         
     plot_data = plot_data.sort_values(by="MonthLocal")
 
-    plot_grouped = plot_data.groupby('MonthLocal').mean()
+    numeric_columns = plot_data.select_dtypes(include='number').columns
+
+    plot_grouped = plot_data.groupby('MonthLocal')[numeric_columns].mean()
 
     # Draw Chart
     fig, ax = plt.subplots()
@@ -89,10 +94,12 @@ def monthly_pollution(df, pollutant, cali=True, values=True):
 def ranking_pollution(df, pollutant, values):
 
     # Prepare Data
-    plot_data = df.groupby('State').mean()[pollutant]
+    plot_data = df.groupby('State')[pollutant].mean()
+
     country_data = pd.Series(plot_data.mean(),['US National Average'])
 
-    plot_data = plot_data.append(country_data)
+    plot_data = pd.concat([plot_data, country_data])
+
     plot_data = plot_data.sort_values(ascending=False).head(30).sort_values()
     
     cali_index = list(plot_data.index).index('California')

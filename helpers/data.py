@@ -2,7 +2,8 @@ import pandas as pd
 import geopandas as gpd
 import streamlit as st
 
-@st.cache(allow_output_mutation = True)
+@st.cache_data()
+#allow_output_mutation = True
 def load_data(path, nrows=None):
     df = pd.read_csv(path)
 
@@ -41,7 +42,7 @@ def data_preprocessing(df):
 
         return df
 
-@st.cache(allow_output_mutation = True)
+@st.cache_data
 def load_geo_data(path):
     geo_data = gpd.read_file(path)
 
@@ -56,7 +57,7 @@ def geo_data_preprocessing(geo_data, df):
     geo_data = geo_data[geo_data['NAME']!='Puerto Rico']
 
     # Group the pollution data by state
-    grouped = df.groupby('State').mean()
+    grouped = df.groupby('State')[["NO2Mean", "SO2Mean", "O3Mean", "COMean"]].mean()
 
     # Merge the pollution data and geo data
     merged = geo_data.merge(grouped,how='left',right_index=True,left_on='NAME')

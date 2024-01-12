@@ -11,7 +11,9 @@ from sklearn.preprocessing import PolynomialFeatures
 plt.style.use('ggplot')
 
 def pollution_model(data, name, degree):
-    plot_grouped = data.groupby('YearLocal').mean()
+    numeric_columns = data.select_dtypes(include='number').columns
+
+    plot_grouped = data.groupby('YearLocal')[numeric_columns].mean()
     
     X = np.arange(len(plot_grouped[name])).reshape(-1,1)
     y = plot_grouped[name]
@@ -34,7 +36,9 @@ def pollution_prediction(df, pollutant, cali=True, values=True):
     
     plot_data = plot_data.sort_values(by="YearLocal")
 
-    plot_grouped = plot_data.groupby('YearLocal').mean()
+    numeric_columns = plot_data.select_dtypes(include='number').columns
+
+    plot_grouped = plot_data.groupby('YearLocal')[numeric_columns].mean()
 
     years = range(2000,2026)
 
